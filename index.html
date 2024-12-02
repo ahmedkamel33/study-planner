@@ -6,17 +6,21 @@
     <title>Study Time Planner</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <i class="fas fa-clock"></i> Study Time Planner
+                <i class="fas fa-graduation-cap"></i> Study Time Planner
             </a>
-            <div class="donate-button">
-                <button type="button" class="btn btn-donate" data-bs-toggle="modal" data-bs-target="#supportModal">
-                    <i class="fas fa-heart"></i> Support This Project
+            <div class="nav-buttons">
+                <button class="btn btn-stats" data-bs-toggle="modal" data-bs-target="#statsModal">
+                    <i class="fas fa-chart-bar"></i> Stats
+                </button>
+                <button class="btn btn-donate" data-bs-toggle="modal" data-bs-target="#supportModal">
+                    <i class="fas fa-heart"></i> Support
                 </button>
             </div>
         </div>
@@ -31,26 +35,47 @@
                     </div>
                     <div class="card-body">
                         <form id="subjectForm">
-                            <div class="mb-3">
-                                <label for="subjectName" class="form-label">Subject Name</label>
+                            <div class="form-floating mb-3">
                                 <input type="text" class="form-control" id="subjectName" placeholder="Enter subject name" required>
+                                <label for="subjectName">Subject Name</label>
                             </div>
-                            <div class="mb-3">
-                                <label for="studyTime" class="form-label">Study Time (minutes)</label>
+                            <div class="form-floating mb-3">
                                 <input type="number" class="form-control" id="studyTime" placeholder="Enter study time" required>
+                                <label for="studyTime">Study Time (minutes)</label>
                             </div>
-                            <div class="mb-3">
-                                <label for="priority" class="form-label">Priority Level</label>
+                            <div class="form-floating mb-3">
                                 <select class="form-select" id="priority">
-                                    <option value="High">High</option>
-                                    <option value="Medium">Medium</option>
-                                    <option value="Low">Low</option>
+                                    <option value="High">High Priority</option>
+                                    <option value="Medium">Medium Priority</option>
+                                    <option value="Low">Low Priority</option>
                                 </select>
+                                <label for="priority">Priority Level</label>
                             </div>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary btn-add">
                                 <i class="fas fa-plus"></i> Add Subject
                             </button>
                         </form>
+                    </div>
+                </div>
+
+                <div class="card stats-card mt-4">
+                    <div class="card-body">
+                        <div class="total-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-clock"></i>
+                                <div class="stat-info">
+                                    <h4>Total Time</h4>
+                                    <p><span id="totalTime">0</span> minutes</p>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-book"></i>
+                                <div class="stat-info">
+                                    <h4>Subjects</h4>
+                                    <p><span id="totalSubjects">0</span> subjects</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -60,8 +85,18 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <h3><i class="fas fa-list"></i> Study Schedule</h3>
-                            <div class="total-time">
-                                <i class="fas fa-clock"></i> Total Time: <span id="totalTime">0</span> minutes
+                            <div class="header-actions">
+                                <div class="dropdown">
+                                    <button class="btn btn-filter dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                        <i class="fas fa-filter"></i> Filter
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#" onclick="filterSubjects('all')">All</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="filterSubjects('high')">High Priority</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="filterSubjects('medium')">Medium Priority</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="filterSubjects('low')">Low Priority</a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -95,14 +130,47 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="qr-code mt-3">
-                                    <!-- Add your InstaPay QR code image here if available -->
-                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="support-message mt-4">
                         <p>Your support helps maintain and improve Study Time Planner. Thank you for your contribution! 🙏</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Modal -->
+    <div class="modal fade" id="statsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Study Statistics</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="fas fa-clock"></i>
+                            <h4>Total Study Time</h4>
+                            <p><span id="modalTotalTime">0</span> minutes</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-tasks"></i>
+                            <h4>High Priority</h4>
+                            <p><span id="highPriorityCount">0</span> subjects</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-list"></i>
+                            <h4>Medium Priority</h4>
+                            <p><span id="mediumPriorityCount">0</span> subjects</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-check"></i>
+                            <h4>Low Priority</h4>
+                            <p><span id="lowPriorityCount">0</span> subjects</p>
+                        </div>
                     </div>
                 </div>
             </div>
