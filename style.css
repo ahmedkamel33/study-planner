@@ -5,6 +5,9 @@
     --text-color: #2d3436;
     --border-radius: 10px;
     --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --card-bg: #f8f9fa;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --text-color-muted: #666;
 }
 
 body {
@@ -288,6 +291,92 @@ body {
 .support-message {
     text-align: center;
     color: #666;
+}
+
+/* Edit Modal Styles */
+#editModal .modal-content {
+    border: none;
+    box-shadow: var(--card-shadow);
+}
+
+#editModal .modal-header {
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+#editModal .btn-close {
+    filter: brightness(0) invert(1);
+}
+
+#editModal .form-floating {
+    margin-bottom: 1rem;
+}
+
+#editModal .form-control:focus,
+#editModal .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+}
+
+#editModal .btn {
+    padding: 0.75rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+#editModal .btn-primary {
+    background-color: var(--primary-color);
+    border: none;
+}
+
+#editModal .btn-primary:hover {
+    background-color: #357abd;
+    transform: translateY(-2px);
+}
+
+#editModal .btn-secondary {
+    background-color: #6c757d;
+    border: none;
+}
+
+#editModal .btn-secondary:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
+.edit-form {
+    padding: 15px;
+    background: var(--card-bg);
+    border-radius: 8px;
+}
+
+.edit-form input,
+.edit-form select {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.edit-form input:focus,
+.edit-form select:focus {
+    background: var(--card-bg);
+    border-color: var(--primary-color);
+    color: var(--text-color);
+    box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+}
+
+.edit-form select option {
+    background: var(--card-bg);
+    color: var(--text-color);
+}
+
+.edit-form .btn {
+    margin-right: 8px;
+}
+
+.edit-form input::placeholder {
+    color: var(--text-color-muted);
 }
 
 /* Responsive Design */

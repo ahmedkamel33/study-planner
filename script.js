@@ -44,8 +44,6 @@ subjectForm.addEventListener('submit', (e) => {
     saveSubjects();
     displaySubjects();
     subjectForm.reset();
-
-    // Show success message
     showToast('Subject added successfully!');
 });
 
@@ -63,29 +61,85 @@ function displaySubjects(filterPriority = 'all') {
     filteredSubjects.forEach((subject, index) => {
         const card = document.createElement('div');
         card.className = 'subject-card';
+        card.dataset.index = index;
         
         const priorityClass = `priority-${subject.priority.toLowerCase()}`;
         
-        card.innerHTML = `
-            <div class="subject-header">
-                <h4 class="subject-name">${subject.name}</h4>
-                <span class="priority-badge ${priorityClass}">${subject.priority}</span>
-            </div>
-            <div class="subject-time">
-                <i class="fas fa-clock"></i> ${subject.time} minutes
-            </div>
-            <div class="mt-3">
-                <button class="btn btn-sm btn-danger" onclick="deleteSubject(${index})">
-                    <i class="fas fa-trash"></i> Delete
-                </button>
-                <button class="btn btn-sm btn-primary" onclick="editSubject(${index})">
-                    <i class="fas fa-edit"></i> Edit
-                </button>
-            </div>
-        `;
+        // Check if this card is being edited
+        const editingIndex = localStorage.getItem('editingIndex');
+        const isEditing = editingIndex !== null && parseInt(editingIndex) === index;
+        
+        if (isEditing) {
+            card.innerHTML = `
+                <div class="edit-form">
+                    <input type="text" class="form-control mb-2" value="${subject.name}" id="name-${index}">
+                    <input type="number" class="form-control mb-2" value="${subject.time}" id="time-${index}">
+                    <select class="form-select mb-2" id="priority-${index}">
+                        <option value="High" ${subject.priority === 'High' ? 'selected' : ''}>High Priority</option>
+                        <option value="Medium" ${subject.priority === 'Medium' ? 'selected' : ''}>Medium Priority</option>
+                        <option value="Low" ${subject.priority === 'Low' ? 'selected' : ''}>Low Priority</option>
+                    </select>
+                    <div class="mt-2">
+                        <button class="btn btn-sm btn-success" onclick="saveEdit(${index})">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                        <button class="btn btn-sm btn-secondary" onclick="cancelEdit(${index})">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </div>
+                </div>
+            `;
+        } else {
+            card.innerHTML = `
+                <div class="subject-header">
+                    <h4 class="subject-name">${subject.name}</h4>
+                    <span class="priority-badge ${priorityClass}">${subject.priority}</span>
+                </div>
+                <div class="subject-time">
+                    <i class="fas fa-clock"></i> ${subject.time} minutes
+                </div>
+                <div class="mt-3">
+                    <button class="btn btn-sm btn-outline-primary" onclick="startEdit(${index})">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteSubject(${index})">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            `;
+        }
         
         subjectsList.appendChild(card);
     });
+}
+
+function startEdit(index) {
+    localStorage.setItem('editingIndex', index);
+    displaySubjects();
+}
+
+function cancelEdit(index) {
+    localStorage.removeItem('editingIndex');
+    displaySubjects();
+}
+
+function saveEdit(index) {
+    const name = document.getElementById(`name-${index}`).value;
+    const time = document.getElementById(`time-${index}`).value;
+    const priority = document.getElementById(`priority-${index}`).value;
+    
+    if (name && time && priority) {
+        subjects[index] = {
+            name: name,
+            time: parseInt(time),
+            priority: priority
+        };
+        
+        localStorage.removeItem('editingIndex');
+        saveSubjects();
+        displaySubjects();
+        showToast('Subject updated successfully!');
+    }
 }
 
 // Delete subject
@@ -95,25 +149,6 @@ function deleteSubject(index) {
         saveSubjects();
         displaySubjects();
         showToast('Subject deleted successfully!');
-    }
-}
-
-// Edit subject
-function editSubject(index) {
-    const subject = subjects[index];
-    const newName = prompt('Enter new subject name:', subject.name);
-    const newTime = prompt('Enter new study time (minutes):', subject.time);
-    const newPriority = prompt('Enter new priority (High/Medium/Low):', subject.priority);
-    
-    if (newName && newTime && newPriority) {
-        subjects[index] = {
-            name: newName,
-            time: parseInt(newTime),
-            priority: newPriority
-        };
-        saveSubjects();
-        displaySubjects();
-        showToast('Subject updated successfully!');
     }
 }
 
@@ -132,18 +167,14 @@ function copyInstaPay() {
 
 // Show toast notification
 function showToast(message) {
-    // Create toast element
     const toast = document.createElement('div');
     toast.className = 'toast-notification';
     toast.textContent = message;
     
-    // Add toast to document
     document.body.appendChild(toast);
     
-    // Trigger animation
     setTimeout(() => toast.classList.add('show'), 100);
     
-    // Remove toast after animation
     setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => toast.remove(), 300);
@@ -165,6 +196,7 @@ style.textContent = `
         transform: translateY(100px);
         opacity: 0;
         transition: all 0.3s ease;
+        z-index: 9999;
     }
     
     .toast-notification.show {
