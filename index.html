@@ -14,6 +14,11 @@
             <a class="navbar-brand" href="#">
                 <i class="fas fa-clock"></i> Study Time Planner
             </a>
+            <div class="donate-button">
+                <button type="button" class="btn btn-donate" data-bs-toggle="modal" data-bs-target="#supportModal">
+                    <i class="fas fa-heart"></i> Support This Project
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -62,6 +67,42 @@
                     </div>
                     <div class="card-body">
                         <div id="subjectsList" class="subjects-grid"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Support Modal -->
+    <div class="modal fade" id="supportModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Support Study Time Planner</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="support-options">
+                        <div class="support-option">
+                            <div class="instapay-info">
+                                <h6>Support via InstaPay</h6>
+                                <div class="instapay-account">
+                                    <p>InstaPay Account:</p>
+                                    <div class="account-number">
+                                        <span id="instapayAccount">ahmedkamel339@instapay</span>
+                                        <button class="btn btn-copy" onclick="copyInstaPay()">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="qr-code mt-3">
+                                    <!-- Add your InstaPay QR code image here if available -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="support-message mt-4">
+                        <p>Your support helps maintain and improve Study Time Planner. Thank you for your contribution! 🙏</p>
                     </div>
                 </div>
             </div>

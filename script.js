@@ -87,5 +87,31 @@ function deleteSubject(index) {
     }
 }
 
+// Function to copy InstaPay account
+function copyInstaPay() {
+    const instapayAccount = document.getElementById('instapayAccount');
+    const textArea = document.createElement('textarea');
+    textArea.value = instapayAccount.textContent;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+    
+    // Show copy feedback
+    const copyBtn = document.querySelector('.btn-copy');
+    const originalIcon = copyBtn.innerHTML;
+    copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+    copyBtn.style.backgroundColor = '#4CAF50';
+    copyBtn.style.color = 'white';
+    copyBtn.style.borderColor = '#4CAF50';
+    
+    setTimeout(() => {
+        copyBtn.innerHTML = originalIcon;
+        copyBtn.style.backgroundColor = '';
+        copyBtn.style.color = '';
+        copyBtn.style.borderColor = '';
+    }, 2000);
+}
+
 // Load subjects on startup
 updateSubjectsList();
